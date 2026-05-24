@@ -24,3 +24,7 @@ sandbox/
 
 # Custom scripts
 deploy.sh
+
+# Local Docker data
+.docker-data/
+
