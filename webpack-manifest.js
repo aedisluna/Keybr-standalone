@@ -1,5 +1,9 @@
-import { basename, extname, join } from "node:path";
+import { basename, extname, posix } from "node:path";
 import webpack from "webpack";
+
+// Asset paths are URLs and must always use forward slashes, even when the
+// build runs on Windows (where node:path.join would emit backslashes).
+const join = posix.join;
 
 const {
   Compilation,

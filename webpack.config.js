@@ -107,6 +107,7 @@ export default [
     entry: {
       index: "./packages/server/lib/main.ts",
       keybr: "./packages/server-cli/lib/main.ts",
+      desktop: "./packages/server/lib/desktop.ts",
     },
     output: {
       path: join(import.meta.dirname, "root", "lib"),
@@ -121,16 +122,16 @@ export default [
         rule_js(),
         rule_less(false),
         {
-          test: /\/assets\//,
+          test: /[\\/]assets[\\/]/,
           use: "null-loader",
         },
         {
-          test: /\/knex\/lib\/dialects\//,
-          exclude: /\/mysql|sqlite3|better-sqlite3\//,
+          test: /[\\/]knex[\\/]lib[\\/]dialects[\\/]/,
+          exclude: /[\\/](mysql|sqlite3|better-sqlite3)[\\/]/,
           use: "null-loader",
         },
         {
-          test: /\/knex\/lib\/migrations\//,
+          test: /[\\/]knex[\\/]lib[\\/]migrations[\\/]/,
           use: "null-loader",
         },
       ],
@@ -163,7 +164,6 @@ export default [
     entry: {
       browser: "./packages/keybr-pages-browser/lib/entry.ts",
       server: "./packages/keybr-pages-server/lib/entry.ts",
-      ads: "./packages/thirdparties-ads/lib/entry.ts",
     },
     output: {
       path: join(import.meta.dirname, "root", "public", "assets"),
@@ -179,7 +179,7 @@ export default [
         rule_js(),
         rule_less(true),
         {
-          test: /\/assets\//,
+          test: /[\\/]assets[\\/]/,
           type: "asset/resource",
         },
       ],

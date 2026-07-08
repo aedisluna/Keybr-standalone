@@ -1,14 +1,15 @@
 {
   "private": true,
-  "name": "keybr.com",
+  "name": "keybr-standalone",
   "version": "0.0.0",
+  "description": "Offline desktop fork of keybr.com — typing practice without ads or internet",
   "type": "module",
-  "homepage": "https://www.keybr.com",
+  "homepage": "https://github.com/aedisluna/Keybr-standalone",
   "license": "GPL-3",
   "author": "Aliaksandr Radzivanovich <aradzivanovich@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git@github.com:aradzie/keybr.com.git"
+    "url": "https://github.com/aedisluna/Keybr-standalone.git"
   },
   "workspaces": [
     "packages/*",

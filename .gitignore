@@ -15,6 +15,7 @@ build/
 out/
 tmp/
 sandbox/
+desktop/dist/
 .vscode/
 .idea/
 *.tsbuildinfo

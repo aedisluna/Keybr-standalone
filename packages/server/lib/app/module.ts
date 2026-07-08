@@ -10,8 +10,9 @@ import { compress } from "@fastr/middleware-compress";
 import { conditional } from "@fastr/middleware-conditional";
 import { SessionHandler } from "@fastr/middleware-session";
 import { staticFiles } from "@fastr/middleware-static-files";
+import { Env } from "@keybr/config";
 import { ManifestModule } from "./assets.ts";
-import { AuthModule, loadUser } from "./auth/index.ts";
+import { AuthModule, desktopAutoLogin, loadUser } from "./auth/index.ts";
 import { cacheControl } from "./cachecontrol.ts";
 import { ErrorHandler } from "./error/index.ts";
 import { MailModule } from "./mail/index.ts";
@@ -34,14 +35,16 @@ export class ApplicationModule implements Module {
     container: Container,
     @inject("publicDir") publicDir: string,
   ): Application {
-    return new Application(container, { behindProxy: true })
+    const app = new Application(container, { behindProxy: true })
       .use(ErrorHandler)
       .use(conditional())
       .use(compress())
       .use(staticFiles(publicDir, { cacheControl }))
-      .use(SessionHandler)
-      .use(loadUser())
-      .use(mainRoutes());
+      .use(SessionHandler);
+    if (Env.getBoolean("DESKTOP_MODE", false)) {
+      app.use(desktopAutoLogin());
+    }
+    return app.use(loadUser()).use(mainRoutes());
   }
 
   @provides({ id: Application, name: kGame, singleton: true })

@@ -15,7 +15,6 @@ for (const path of [
   "/help",
   "/high-scores",
   "/layouts",
-  "/multiplayer",
   "/profile",
   "/profile/example1",
   "/profile/example2",

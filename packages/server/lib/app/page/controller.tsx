@@ -144,19 +144,6 @@ export class Controller {
     return this.renderPage(ctx, Pages.typingTest, intl);
   }
 
-  @http.GET(`${Pages.multiplayer.path}`)
-  async ["multiplayer"](ctx: Context<RouterState & AuthState>) {
-    return this.renderPage(ctx, Pages.multiplayer);
-  }
-
-  @http.GET(`/{locale:${localePattern}}${Pages.multiplayer.path}`)
-  async ["multiplayer-i18n"](
-    ctx: Context<RouterState & AuthState>,
-    @pathParam("locale", pIntl) intl: IntlShape,
-  ) {
-    return this.renderPage(ctx, Pages.multiplayer, intl);
-  }
-
   @http.GET(`${Pages.termsOfService.path}`)
   async ["terms-of-service"](ctx: Context<RouterState & AuthState>) {
     return this.renderPage(ctx, Pages.termsOfService);

@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "name": "keybr-desktop",
+  "productName": "Keybr",
+  "version": "0.0.0",
+  "description": "Offline desktop build of Keybr",
+  "license": "GPL-3.0",
+  "main": "main.js",
+  "scripts": {
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "start": "electron .",
+    "dist": "electron-builder --win --config electron-builder.yml"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.8.0"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.7.1",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  }
+}

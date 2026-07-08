@@ -1,9 +1,16 @@
-import { type KeyId, useKeyboard } from "@keybr/keyboard";
+import { type Keyboard, type KeyId, useKeyboard } from "@keybr/keyboard";
 import { type Result } from "@keybr/result";
 import { type LineList } from "@keybr/textinput";
-import { addKey, deleteKey, emulateLayout } from "@keybr/textinput-events";
+import {
+  addKey,
+  deleteKey,
+  emulateLayout,
+  type IInputEvent,
+} from "@keybr/textinput-events";
 import { makeSoundPlayer } from "@keybr/textinput-sounds";
 import {
+  Alert,
+  toast,
   useDocumentEvent,
   useHotkeys,
   useTimeout,
@@ -69,6 +76,8 @@ function useLessonState(
   const onResultRef = useRef(onResult);
   onResultRef.current = onResult;
 
+  const lastLayoutWarningRef = useRef(0);
+
   return useMemo(() => {
     // New lesson.
     const state = new LessonState(progress, (result, textInput) => {
@@ -107,6 +116,7 @@ function useLessonState(
           );
         },
         onInput: (event) => {
+          warnOnLayoutMismatch(event, keyboard, lastLayoutWarningRef);
           state.lastLesson = null;
           const feedback = state.onInput(event);
           setLines(state.lines);
@@ -124,4 +134,44 @@ function useLessonState(
       handleInput: onInput,
     };
   }, [progress, keyboard, timeout, key]);
+}
+
+const LAYOUT_WARNING_INTERVAL = 5000;
+
+// Detects when the typed character is a letter that the selected keyboard
+// layout cannot produce (e.g. a Cyrillic letter typed while the OS keyboard is
+// set to a non-Latin layout). In that case the key shows up on the on-screen
+// keyboard but never matches the lesson, so we nudge the user once in a while.
+function warnOnLayoutMismatch(
+  event: IInputEvent,
+  keyboard: Keyboard,
+  lastWarningRef: { current: number },
+): void {
+  if (event.inputType !== "appendChar") {
+    return;
+  }
+  const { codePoint } = event;
+  if (codePoint <= 0x0000) {
+    return;
+  }
+  const char = String.fromCodePoint(codePoint);
+  if (!/\p{L}/u.test(char)) {
+    return; // Only letters indicate a layout mismatch.
+  }
+  if (keyboard.getCombo(codePoint) != null) {
+    return; // The character belongs to the current layout.
+  }
+  const now = Date.now();
+  if (now - lastWarningRef.current < LAYOUT_WARNING_INTERVAL) {
+    return;
+  }
+  lastWarningRef.current = now;
+  toast(
+    <Alert severity="info" closeButton={true}>
+      {"The keys you are typing don't belong to this keyboard layout. " +
+        "Switch your operating system's keyboard layout (for example, to " +
+        "English) to start practicing."}
+    </Alert>,
+    { autoClose: 6000 },
+  );
 }

@@ -1,0 +1,51 @@
+appId: app.keybr.desktop
+productName: Keybr
+copyright: Copyright (c) keybr.com
+
+# better-sqlite3 is shipped as an Electron prebuilt binary fetched by
+# prebuild-install (no local C++ toolchain required), so electron-builder must
+# not try to rebuild native modules from source.
+npmRebuild: false
+
+directories:
+  output: dist
+  buildResources: build
+
+# Only the Electron wrapper itself goes into the asar. Production dependencies
+# (better-sqlite3) are included automatically by electron-builder. The server
+# bundle and web assets are shipped as extra resources (see below) so the
+# spawned Node process can read them straight from disk.
+files:
+  - main.js
+  - preload.js
+  - package.json
+
+# The bundled server is spawned as a separate Node process that resolves
+# dependencies from disk via NODE_PATH (see main.js). Native modules also
+# cannot be loaded from inside the asar archive. The only production
+# dependency is better-sqlite3 and its helpers, so unpack all of node_modules.
+asarUnpack:
+  - "node_modules/**"
+
+# The compiled server (root/lib/desktop.js) and the public web assets
+# (root/public) produced by `npm run compile && npm run build` in the repo root.
+extraResources:
+  - from: ../root/lib
+    to: root/lib
+    filter:
+      - "**/*"
+      - "!**/*.map"
+  - from: ../root/public
+    to: root/public
+    filter:
+      - "**/*"
+
+win:
+  target:
+    - nsis
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  shortcutName: Keybr
