@@ -2,6 +2,10 @@
 
 Offline desktop fork of [keybr.com](https://github.com/aradzie/keybr.com) - typing practice without internet.
 
+## Download (Windows)
+
+Latest release: [Keybr Standalone 0.0.0](https://github.com/aedisluna/Keybr-standalone/releases/tag/v0.0.0) — download `Keybr.Setup.0.0.0.exe`, run the installer, launch from the Start Menu.
+
 ## What's different from keybr.com
 
 - **Desktop app** (Electron) with a local server and SQLite storage
